@@ -14,6 +14,8 @@ def cli():
 def solve(day: int) -> None:
     """Solves AOC for the given day"""
     print(f"Running Advent of Code for day {day}")
+    print(f"- - - - - - - - - - - - - - - - - - ")
+    print("Part 1:")
 
     try:
         Solver(day)
@@ -21,7 +23,8 @@ def solve(day: int) -> None:
         print("Exiting without solution")
         sys.exit(1)
 
-    print("--------------\n")
+    print("--------------")
+    print("Part 2:")
 
     try:
         Solver(day, part_1=False)

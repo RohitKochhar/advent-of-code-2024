@@ -1,3 +1,4 @@
+import json
 import os
 
 INPUT_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs")
@@ -11,42 +12,37 @@ class Solver:
         try:
             self.solve_func = self.__getattribute__(f"day_{day}{'a' if part_1 else 'b'}_solution")
         except AttributeError:
-            print(f"No solution has been implemented for day {day}{'a' if part_1 else 'b'}.")
-            raise RuntimeError
+            raise RuntimeError(f"No solution has been implemented for day {day}{'a' if part_1 else 'b'}.")
 
         try:
             self.test(part_1)
             print("Test case success!")
         except AssertionError as e:
-            print(f"Test case failed! {str(e)}")
-            raise RuntimeError
+            raise RuntimeError(f"Test case failed! {str(e)}")
 
         try:
-            result = self.solve(part_1)
+            result = self.solve()
         except FileNotFoundError:
-            print(f"Missing input file for {day}{'a' if part_1 else 'b'}")
-            raise RuntimeError
+            raise RuntimeError(f"Missing input file for {day}{'a' if part_1 else 'b'}")
 
         print(f"Expected solution for day {self.day}{'a' if part_1 else 'b'}: {result}")
 
     def test(self, part_1: bool):
         """Runs the solve function against the test case"""
         # Load input data
-        with open(os.path.join(TEST_DATA_DIR, "in", f"{self.day}{'a' if part_1 else 'b'}.txt")) as f:
+        with open(os.path.join(TEST_DATA_DIR, "in", f"{self.day}.txt")) as f:
             test_in = f.read()
         
         # Load output data
-        with open(os.path.join(TEST_DATA_DIR, "out", f"{self.day}{'a' if part_1 else 'b'}.txt")) as f:
-            test_out = f.read()
-
-        test_out = test_out.strip()
+        with open(os.path.join(TEST_DATA_DIR, "out.json")) as f:
+            test_out = json.load(f)[self.day]['a' if part_1 else 'b']
 
         result = self.solve_func(test_in)
 
         if str(result) != str(test_out):
             raise AssertionError(f"Expected {test_out}, instead got {result}!")
         
-    def solve(self, part_1: bool):
+    def solve(self):
         """Runs the solve function against the input file"""
         # Load input data
         with open(os.path.join(INPUT_DATA_DIR, f"{self.day}.txt")) as f:
