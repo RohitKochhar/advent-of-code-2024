@@ -1,4 +1,4 @@
-from .Solver import Solver
+from solver.base_solver import Solver
 
 import click
 import sys
@@ -18,16 +18,16 @@ def solve(day: int) -> None:
     print("Part 1:")
 
     try:
-        Solver(day)
-    except RuntimeError:
-        print("Exiting without solution")
+        Solver(day, part="a")
+    except RuntimeError as e:
+        print(str(e))
         sys.exit(1)
 
     print("--------------")
     print("Part 2:")
 
     try:
-        Solver(day, part_1=False)
+        Solver(day, part="b")
     except RuntimeError as e:
         print(str(e))
         sys.exit(1)
