@@ -118,7 +118,42 @@ class Solver:
     # DAY 2
     def __load_rows(self, table: str):
         """Returns an MxN table into M lists"""
-        return filter(None, table.splitlines())
+        return list(filter(None, table.splitlines()))
+    
+    def __check_level_validity(self, row):
+        if isinstance(row, str):
+            row = row.split(" ")
+
+        # Assume all are true to start
+        asc = True
+        des = True
+        delta = True
+
+        for i in range(0, len(row) - 1):
+            a = int(row[i])
+            b = int(row[i+1])
+            # Check if the ascending assumption is still true
+            asc = asc & (a < b)
+            des = des & (a > b)
+            delta = delta & (abs(a - b) in [1,2,3])
+
+        return delta and (asc or des)
+    
+    def __recurse_list(self, levels: list, idx: int):
+        """
+        Recurses the list to remove each element until a valid solution is found
+        """
+        if self.__check_level_validity(levels):
+            return True
+        
+        modified_level = levels[:idx] + levels[idx+1:]
+
+        if self.__check_level_validity(modified_level):
+            return True
+        elif idx == len(levels) - 1:
+            return False
+        else:
+            return self.__recurse_list(levels, idx + 1)
     
     def day_2a_solution(self, input: str):
         """
@@ -127,20 +162,14 @@ class Solver:
         - Uniformly increasing/decreasing
         - Only changing from the last by [1, 3]
         """
-        rows = self.__load_rows(input)
+        return sum(list(map(self.__check_level_validity, self.__load_rows(input))))
 
-        valid_rows = []
+    def day_2b_solution(self, input: str):
+        """
+        Same as step 1, but we can now remove a single element to make the list safe
+        """
+        valid = 0
+        for row in self.__load_rows(input):
+            valid += 1 if self.__recurse_list(row.split(" "), 0) else 0
 
-        for row in rows:
-            row = row.split(" ")
-            row = list(map(int, row))
-            # Ignore the rows that aren't either uniformly increasing/decreasing
-            valid = (list(sorted(row)) == row or list(sorted(row, reverse=True)) == row)
-            # Ensure each item is within the acceptable delta
-            for i in range(0, len(row) - 1):
-                valid = valid & (abs(int(row[i]) - int(row[i+1])) in [1,2,3])
-            
-            if valid:
-                valid_rows.append(row)
-
-        return len(valid_rows)
+        return valid
