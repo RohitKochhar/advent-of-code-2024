@@ -115,4 +115,32 @@ class Solver:
 
         return total
 
+    # DAY 2
+    def __load_rows(self, table: str):
+        """Returns an MxN table into M lists"""
+        return filter(None, table.splitlines())
+    
+    def day_2a_solution(self, input: str):
+        """
+        Given an input of MxN table, find the number
+        of rows in which each number is:
+        - Uniformly increasing/decreasing
+        - Only changing from the last by [1, 3]
+        """
+        rows = self.__load_rows(input)
 
+        valid_rows = []
+
+        for row in rows:
+            row = row.split(" ")
+            row = list(map(int, row))
+            # Ignore the rows that aren't either uniformly increasing/decreasing
+            valid = (list(sorted(row)) == row or list(sorted(row, reverse=True)) == row)
+            # Ensure each item is within the acceptable delta
+            for i in range(0, len(row) - 1):
+                valid = valid & (abs(int(row[i]) - int(row[i+1])) in [1,2,3])
+            
+            if valid:
+                valid_rows.append(row)
+
+        return len(valid_rows)
