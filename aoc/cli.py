@@ -28,8 +28,8 @@ def solve(day: int) -> None:
 
     try:
         Solver(day, part_1=False)
-    except RuntimeError:
-        print("Exiting without solution")
+    except RuntimeError as e:
+        print(str(e))
         sys.exit(1)
 
 
