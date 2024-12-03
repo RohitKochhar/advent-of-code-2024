@@ -35,6 +35,10 @@ class Solver:
         test_input_path = os.path.join(TEST_DATA_DIR, "in", f"{self.day}.txt")
         test_output_path = os.path.join(TEST_DATA_DIR, "out.json")
 
+        # Check if a special solution has been given for part 2
+        if os.path.exists(os.path.join(TEST_DATA_DIR, "in", f"{self.day}b.txt")) and self.part == "b":
+            test_input_path = os.path.join(TEST_DATA_DIR, "in", f"{self.day}b.txt")
+
         with open(test_input_path, 'r') as f:
             test_input = f.read()
 
