@@ -19,7 +19,7 @@ def solve(day: int) -> None:
 
     try:
         Solver(day, part="a")
-    except RuntimeError as e:
+    except (RuntimeError, AssertionError, FileNotFoundError) as e:
         print(str(e))
         sys.exit(1)
 
@@ -28,7 +28,7 @@ def solve(day: int) -> None:
 
     try:
         Solver(day, part="b")
-    except RuntimeError as e:
+    except (RuntimeError, AssertionError, FileNotFoundError) as e:
         print(str(e))
         sys.exit(1)
 
