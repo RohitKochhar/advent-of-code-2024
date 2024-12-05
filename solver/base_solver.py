@@ -1,6 +1,7 @@
 import json
 import os
 import importlib
+import time
 from typing import Callable
 
 INPUT_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs")
@@ -17,9 +18,9 @@ class Solver:
         self.solution_func = self._load_solution()
 
         self._run_tests()
-        self.result = self.solve()
+        self.result, time = self.solve()
 
-        print(f"Solution for Day {self.day} Part {self.part.upper()}: {self.result}")
+        print(f"Solution for Day {self.day} Part {self.part.upper()}: {self.result} [{time} ms]")
 
     def _load_solution(self) -> Callable[[str], any]:
         """Dynamically load the solution function for the specified day and part."""
@@ -45,10 +46,12 @@ class Solver:
         with open(test_output_path, 'r') as f:
             test_out = json.load(f)[f"{self.day}"][self.part]
 
+        start = time.time()
         expected = self.solution_func(test_input)
+        end = time.time()
         if str(expected) != str(test_out):
             raise AssertionError(f"Test failed for Day {self.day} Part {self.part.upper()}: Expected {test_out}, got {expected}")
-        print("Test case passed!")
+        print(f"Test case passed [{round((end - start)*1000, 3)} ms]")
 
     def solve(self) -> any:
         """Solve the problem using the input file."""
@@ -59,4 +62,8 @@ class Solver:
         with open(input_path, 'r') as f:
             input_data = f.read()
 
-        return self.solution_func(input_data)
+        start = time.time()
+        expected = self.solution_func(input_data)
+        end = time.time()
+
+        return expected, round((end - start)*1000, 3)
