@@ -55,7 +55,7 @@ def part_b(input_data: str) -> int:
 
         ordering_nums = list(set([inner for outer in rules for inner in outer]))
 
-        ordered_rules = []
+        ordered_rules: List[int] = []
 
         for num in ordering_nums:
             # Get all the numbers this one must precede
