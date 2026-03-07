@@ -1,0 +1,33 @@
+name: Mypy Type Checking
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          # Use your desired Python version
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install mypy
+          # If your project has dependencies needed for type checking, 
+          # install them as well. For example:
+          # pip install -r requirements.txt
+
+      - name: Run mypy
+        run: |
+          mypy .

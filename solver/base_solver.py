@@ -2,7 +2,7 @@ import json
 import os
 import importlib
 import time
-from typing import Callable
+from typing import Callable, Tuple, Any
 
 INPUT_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs")
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests")
@@ -22,7 +22,7 @@ class Solver:
 
         print(f"Solution for Day {self.day} Part {self.part.upper()}: {self.result} [{time} ms]")
 
-    def _load_solution(self) -> Callable[[str], any]:
+    def _load_solution(self) -> Callable[[str], Any]:
         """Dynamically load the solution function for the specified day and part."""
         try:
             day_module = importlib.import_module(f"solver.day{self.day}")
@@ -53,7 +53,7 @@ class Solver:
             raise AssertionError(f"Test failed for Day {self.day} Part {self.part.upper()}: Expected {test_out}, got {expected}")
         print(f"Test case passed [{round((end - start)*1000, 3)} ms]")
 
-    def solve(self) -> any:
+    def solve(self) -> Tuple[int, float]:
         """Solve the problem using the input file."""
         input_path = os.path.join(INPUT_DATA_DIR, f"{self.day}.txt")
         if not os.path.exists(input_path):
